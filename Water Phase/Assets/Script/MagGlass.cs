@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MagGlass : MonoBehaviour
 {
-    [SerializeField] Collider2D glassPanel, air, water, ice;
+    [SerializeField] Collider2D glassPanel, air, water, ice, blockerLeft, blockerRight;
     [SerializeField] Animator animator;
     private bool isPointerDown;
     private Vector3 oldPos;
@@ -16,7 +16,8 @@ public class MagGlass : MonoBehaviour
     {
         if (isPointerDown)
         {
-            transform.position = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0);
+            transform.position =
+            new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0);
         }
 
         GlassCollide();
@@ -24,13 +25,14 @@ public class MagGlass : MonoBehaviour
 
     private void GlassCollide()
     {
-        if (Physics2D.IsTouchingLayers(glassPanel))
+        if (Physics2D.IsTouchingLayers(blockerLeft) || Physics2D.IsTouchingLayers(blockerRight))
+        {
+            animator.Play("Not");
+        }
+        else if (Physics2D.IsTouchingLayers(glassPanel))
         {
             animator.Play("GlassPanel");
-        }
-        else if (Physics2D.IsTouchingLayers(air))
-        {
-            animator.Play("Air");
+            if (!isPointerDown) transform.position = oldPos;
         }
         else if (Physics2D.IsTouchingLayers(water))
         {
@@ -39,6 +41,10 @@ public class MagGlass : MonoBehaviour
         else if (Physics2D.IsTouchingLayers(ice))
         {
             animator.Play("Ice");
+        }
+        else if (Physics2D.IsTouchingLayers(air))
+        {
+            animator.Play("Air");
         }
         else
         {
@@ -50,10 +56,6 @@ public class MagGlass : MonoBehaviour
     {
         isPointerDown = false;
         transform.localScale = new Vector3(0.05f, 0.05f, 1);
-        if (Physics2D.IsTouchingLayers(glassPanel))
-        {
-            transform.position = oldPos;
-        }
     }
 
     public void OnPointerDown()

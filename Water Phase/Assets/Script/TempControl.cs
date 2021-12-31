@@ -9,6 +9,7 @@ public class TempControl : MonoBehaviour
     [SerializeField] TextMesh tempText, waterState;
     [SerializeField] Transform piston, pistonPath;
     [SerializeField] ParticleSystem bubblePS;
+    [SerializeField] AudioSource buttonSound;
     private float orgWater, orgAir;
 
     private void Start()
@@ -74,6 +75,8 @@ public class TempControl : MonoBehaviour
             water.localScale = new Vector3(water.localScale.x, waterScale, water.localScale.z);
             return;
         }
+
+        ice.gameObject.SetActive(false);
 
         if (temp <= 100)
         {
@@ -179,6 +182,7 @@ public class TempControl : MonoBehaviour
 
     public void TempControlButton(int tempTo)
     {
+        buttonSound.Play();
         tempController = tempTo;
     }
 }
